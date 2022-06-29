@@ -33,7 +33,16 @@ app.post("/api/notes",(req,res) => {
     fs.writeFileSync(path.join(__dirname, "db/db.json"), JSON.stringify(dbInfo, null, 2))
     res.json(newTask)
 })
-
+app.delete("/api/notes/:id", (req,res) => {
+    const {id} = req.params
+    const db = fs.readFileSync(path.join(__dirname, "db/db.json"))
+    let dbInfo = JSON.parse(db)
+    dbInfo = dbInfo.filter((task)=> {
+        return task.id != id
+    })
+    fs.writeFileSync(path.join(__dirname, "db/db.json"), JSON.stringify(dbInfo, null, 2))
+    res.sendStatus(200)
+})
 
 app.get("/notes",(req,res) => {
     res.sendFile(path.join(__dirname, "public/notes.html"))
